@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+*.log
+
+.vscode/
+
+.pnp/
+.pnpm-debug.log
+pnpm-lock.yaml
+
+*.tsbuildinfo
+
+.DS_Store
+Thumbs.db
