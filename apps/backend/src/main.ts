@@ -1,6 +1,10 @@
 import dotenv from "dotenv";
 import { connectMongo } from "./infrastructure/db/mongo";
 import { createServer } from "./presentation/server";
+import { Server } from "socket.io";
+import http from 'http'
+import jwt from "jsonwebtoken"
+import { socketAuth } from "./presentation/sockets/socketAuth";
 
 dotenv.config();
 
