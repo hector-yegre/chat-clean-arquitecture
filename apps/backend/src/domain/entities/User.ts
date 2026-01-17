@@ -18,7 +18,7 @@ export class User {
     id?: string;
     createdAt?: Date;
   }) {
-    this.id = params.id;
+    this.id = params.id ?? crypto.randomUUID();
     this.name = params.name;
     this.email = params.email;
     this.passwordHash = params.passwordHash;
