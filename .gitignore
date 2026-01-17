@@ -1,15 +1,16 @@
-node_modules/
-dist/
+# Node
+node_modules
+npm-debug.log*
+pnpm-debug.log*
+
+# Build
+dist
+build
+
+# Env
 .env
-*.log
+.env.local
 
-.vscode/
-
-.pnp/
-.pnpm-debug.log
-pnpm-lock.yaml
-
-*.tsbuildinfo
-
+# OS
 .DS_Store
 Thumbs.db
