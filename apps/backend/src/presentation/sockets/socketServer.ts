@@ -1,6 +1,7 @@
 import { Server as HttpServer } from "node:http";
 import { Server } from "socket.io";
 import { socketAuth } from "./socketAuth";
+import { RegisterChatSocket } from "./chatSocket";
 
 
 
@@ -18,16 +19,9 @@ export const initSocketServer = (server:HttpServer) => {
     
     io.on('connection',(socket)=>{
       
-        console.log('usuario conectado:',socket.data.user.email);
+       // console.log('usuario conectado:',socket.data.user.email);
     
-       socket.on('chat-message',( msg )=>{
-            
-            io.emit('chat-message',{
-                user:socket.data.user.email,
-                message: msg,
-            });
-
-        });
+       RegisterChatSocket(io);
 
         socket.on('disconnect', ()=> {
           console.log(" Usuario desconectado");
