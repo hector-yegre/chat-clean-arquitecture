@@ -2,7 +2,7 @@ import { Server as HttpServer } from "node:http";
 import { Server } from "socket.io";
 import { socketAuth } from "./socketAuth";
 import { RegisterChatSocket } from "./chatSocket";
-
+import { registerChatEvents } from "./createConversation";
 
 
 export const initSocketServer = (server:HttpServer) => {
@@ -21,8 +21,10 @@ export const initSocketServer = (server:HttpServer) => {
       
        // console.log('usuario conectado:',socket.data.user.email);
     
-       RegisterChatSocket(io);
-
+       registerChatEvents(socket, io);
+       
+       RegisterChatSocket(socket,io);
+       
         socket.on('disconnect', ()=> {
           console.log(" Usuario desconectado");
         });

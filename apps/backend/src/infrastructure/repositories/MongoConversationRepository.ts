@@ -3,28 +3,30 @@ import { ConversationRepository } from "../../domain/repositories/ConversationRe
 import { Conversation } from "../../domain/entities/Conversation";
 import { ConversationModel } from "../models/conversationModel";
 import { UserRole } from "../../domain/enums/UserRole";
+import mongoose from "mongoose";
 
 export class MongoConversationRepository implements ConversationRepository {
   
-  async save(conversation: Conversation): Promise<void> {
+  async save(conversation: Conversation): Promise<Conversation> {
     
-    
-    const doc = new ConversationModel({
-      id: conversation.id,
+    const doc = await ConversationModel.create({
       isGroup: conversation.isGroup,
-      name: conversation.getConversationName(),
-      participants: conversation.participants.map( participant => ({
-        user: participant.userId,
-        role: participant.role
-      })),
-      messages: conversation.messages.map(m => ({
-        sender: m.emisorId,
-        content: m.content,
-        createdAt: m.createdAt
+      name: conversation.name,
+      participants: conversation.participants.map(participant => ({ 
+        user: new mongoose.Types.ObjectId(participant.userId), 
+        role: participant.role 
       })),
       createdAt: conversation.createdAt
     });
-    await doc.save();
+
+    return new Conversation({
+      id: doc._id.toString(),
+      isGroup: doc.isGroup,
+      name: conversation.getConversationName(),
+      participants: conversation.participants,
+      messages: [],
+      createdAt: doc.createdAt,
+    });
   }
 
   async findById(id: string): Promise<Conversation | null> {
@@ -37,7 +39,7 @@ export class MongoConversationRepository implements ConversationRepository {
 
     // obtenemos participantes
     const participants = conversation.participants.map( participant => ({ 
-            userId: participant.user.toString(), 
+            userId: participant.user._id.toString(), 
             role: participant.role as UserRole
     }));
 
@@ -46,8 +48,8 @@ export class MongoConversationRepository implements ConversationRepository {
       isGroup: conversation.isGroup,
       name: conversation.name ?? 'private',
       participants: participants,
-      messages: conversation.messages.map(message => ({ emisorId: message.emisor.toString(), content: message.content, createdAt: message.createAt })),
-      createdAt: conversation.createAt
+      messages: conversation.messages.map(message => ({ emisorId: message.emisor.toString(), content: message.content, createdAt: message.createdAt })),
+      createdAt: conversation.createdAt,
     });
   }
 
@@ -60,8 +62,8 @@ export class MongoConversationRepository implements ConversationRepository {
       isGroup: user.isGroup,
       name: user.name ?? 'private',
       participants: user.participants.map((participant:any) => ({ userId: participant.user._id.toString(), role: participant.role })),
-      messages: user.messages.map(message => ({ emisorId: message.emisor.toString(), content: message.content, createdAt: message.createAt })),
-      createdAt: user.createAt,
+      messages: user.messages.map(message => ({ emisorId: message.emisor.toString(), content: message.content, createdAt: message.createdAt })),
+      createdAt: user.createdAt,
     }));
 
   }
@@ -69,7 +71,15 @@ export class MongoConversationRepository implements ConversationRepository {
   async addMessage(conversationId: string, emisorId: string, content: string): Promise<void> {
     await ConversationModel.findByIdAndUpdate(
       conversationId,
-      { $push: { messages: { emisor: emisorId, content, createdAt: new Date() } } }
+      { $push: 
+        { messages: 
+          { 
+            emisor: new mongoose.Types.ObjectId(emisorId), 
+            content, 
+            createdAt: new Date() 
+          } 
+        } 
+      }
     );
   }
 

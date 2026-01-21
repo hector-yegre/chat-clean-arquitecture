@@ -1,7 +1,7 @@
 import { Conversation } from "../entities/Conversation";
 
 export interface ConversationRepository {
-    save(conversation:Conversation): Promise<void>
+    save(conversation:Conversation): Promise<Conversation>;
     findById(id:string): Promise<Conversation | null>
     findAllByUserId(userId:string): Promise<Conversation[] | []>
     addMessage(conversationId:string, senderId:string, content:string): Promise<void>

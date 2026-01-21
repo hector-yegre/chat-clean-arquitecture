@@ -11,9 +11,9 @@ const conversationSchema = new mongoose.Schema({
     messages:[{
         emisor: {type: mongoose.Types.ObjectId, ref: "User", required: true},
         content:{type:String, required:true},
-        createAt:{type:Date, default: Date.now}
+        createdAt:{type:Date, default: Date.now}
     }],
-    createAt:{type:Date, default: Date.now}
+    createdAt:{type:Date, default: Date.now}
 });
 
 

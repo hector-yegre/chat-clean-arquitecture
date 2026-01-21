@@ -25,8 +25,8 @@ export class Conversation {
         id?: string;
         isGroup: boolean;
         name: string;
-        participants: { userId: string; role: UserRole }[];
-        messages?: { emisorId: string; content: string; createdAt: Date }[];
+        participants: Participants[];
+        messages?: Message[];
         createdAt?: Date;
     }){
         this.id = params.id ?? crypto.randomUUID(); // de la propia capa de dominio uuid

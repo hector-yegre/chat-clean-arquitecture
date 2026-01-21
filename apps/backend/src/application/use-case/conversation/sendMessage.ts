@@ -8,7 +8,9 @@ interface SendMessageInput {
 }
 
 export class SendMessage {
-  constructor(private conversationRepo: ConversationRepository) {}
+  constructor(
+private conversationRepo: ConversationRepository
+  ) {}
 
   async execute(input: SendMessageInput): Promise<void> {
 
@@ -18,8 +20,9 @@ export class SendMessage {
       throw new Error("conversaion no encontrada");
     }
 
+    console.log(conversation.participants);
     const isParticipant = conversation.participants.some(
-      p => p.userId === input.emisorId
+      p => p.userId.toString() === input.emisorId
     );
 
     if (!isParticipant) {
